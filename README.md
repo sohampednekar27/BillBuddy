@@ -3,7 +3,7 @@
 A simple billing project. The billing logic is written in **C**, and a clean web interface
 (HTML, CSS, JavaScript) lets a shopkeeper or cashier generate bills quickly.
 
-🔗 **Live Demo:** https://YOUR-USERNAME.github.io/BillBuddy/
+🔗 **Live Demo:** https://billbuddy-docs.vercel.app
 
 ## ✨ Features
 - Choose **Grocery Store** or **Restaurant**
