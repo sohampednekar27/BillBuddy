@@ -1,0 +1,8 @@
+# compiled programs
+*.exe
+*.out
+billbuddy
+# generated sales files
+sales_*.txt
+# editor files
+.vscode/

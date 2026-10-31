@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BillBuddy – Grocery & Restaurant Billing</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Lora:ital,wght@1,500&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--a:#7c5cff;--a2:#ff6fb1;--r:22px}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body[data-th=light]{--bg:linear-gradient(135deg,#e9f1ff,#fff0e6 60%,#f3e8ff);--card:rgba(255,255,255,.4);--tx:#1b2440;--mu:#5d6785;--bd:rgba(255,255,255,.7);--sh:0 10px 30px rgba(60,80,140,.12);--b1:#9ec5ff;--b2:#ffc8a8;--b3:#d8b4ff}
+body[data-th=dark]{--bg:linear-gradient(135deg,#0a0f1f,#141a33 60%,#1a1030);--card:rgba(255,255,255,.05);--tx:#eef1ff;--mu:#9aa3c4;--bd:rgba(255,255,255,.13);--sh:0 10px 30px rgba(0,0,0,.4);--b1:#2a4fd6;--b2:#c2410c;--b3:#7c3aed}
+body[data-th=glass]{--bg:linear-gradient(135deg,#1e1b5e,#0e5a8a 55%,#0d8a7a);--card:rgba(255,255,255,.09);--tx:#fff;--mu:rgba(255,255,255,.75);--bd:rgba(255,255,255,.28);--sh:0 12px 36px rgba(0,20,60,.3);--b1:#6aa7ff;--b2:#ff9ec7;--b3:#5ff0d0}
+body[data-t=g]{--a:#3b82f6;--a2:#22d3ee}
+body[data-t=r]{--a:#ff7a3d;--a2:#ff3d77}
+body{margin:0;min-height:100%;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--tx);background:var(--bg);background-attachment:fixed;overflow-x:hidden;transition:background .5s,color .3s}
+.bl{position:fixed;border-radius:50%;filter:blur(60px);opacity:.8;z-index:0;will-change:transform;pointer-events:none}
+.bl:nth-child(1){width:42vmax;height:42vmax;background:var(--b1);top:-10vmax;left:-10vmax;animation:dr1 22s ease-in-out infinite alternate}
+.bl:nth-child(2){width:36vmax;height:36vmax;background:var(--b2);bottom:-8vmax;right:-8vmax;animation:dr1 26s ease-in-out infinite alternate-reverse}
+.bl:nth-child(3){width:30vmax;height:30vmax;background:var(--b3);top:40%;left:45%;animation:dr1 30s ease-in-out infinite alternate}
+@keyframes dr1{to{transform:translate3d(8vmax,6vmax,0) scale(1.15)}}
+#app{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:70px 16px 120px}
+.glass{background:var(--card);-webkit-backdrop-filter:blur(40px) saturate(180%);backdrop-filter:blur(40px) saturate(180%);border:1px solid var(--bd);border-radius:var(--r);box-shadow:var(--sh),inset 0 1px 0 rgba(255,255,255,.25)}
+#themes{position:fixed;z-index:20;top:max(10px,env(safe-area-inset-top,0px));right:12px;display:flex;gap:2px;padding:4px;border-radius:99px}
+#themes button{border:0;background:none;font-size:16px;width:34px;height:34px;border-radius:50%;cursor:pointer;transition:transform .25s,background .25s}
+#themes button.on{background:linear-gradient(135deg,var(--a),var(--a2));transform:scale(1.08)}
+.view{animation:in .55s cubic-bezier(.22,1,.36,1) both}
+@keyframes in{from{opacity:0;transform:translate3d(0,18px,0) scale(.98)}}
+h1{font-size:clamp(28px,5vw,44px);margin:6px 0 4px;font-weight:800;letter-spacing:-.5px}
+h2{margin:0 0 10px;font-size:19px}
+.sub{color:var(--mu);margin:0 0 18px}
+.grad{background:linear-gradient(90deg,var(--a),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.msg{display:inline-block;max-width:100%;padding:12px 20px;font-family:Lora,Georgia,serif;font-style:italic;font-size:16px;line-height:1.45;margin:6px 0 16px}
+.clock{display:flex;gap:16px;align-items:center;padding:16px 20px;margin-bottom:18px;flex-wrap:wrap}
+.clock .em{font-size:38px;animation:bob 5s ease-in-out infinite}
+.clock b{font-size:26px;display:block}.clock small{color:var(--mu)}
+.choose{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.big{padding:30px 16px;text-align:center;cursor:pointer;border:0;color:var(--tx);font:inherit;transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s}
+.big:hover{transform:translateY(-4px)}.big:active{transform:scale(.97)}
+.big .ic{font-size:62px;display:block;animation:bob 4.5s ease-in-out infinite;will-change:transform}
+.big:nth-child(2) .ic{animation-delay:-2s}
+.big b{font-size:20px;display:block;margin-top:8px}.big small{color:var(--mu)}
+.big.g{box-shadow:var(--sh),0 0 0 1px rgba(59,130,246,.25) inset}.big.r{box-shadow:var(--sh),0 0 0 1px rgba(255,122,61,.25) inset}
+@keyframes bob{50%{transform:translate3d(0,-5px,0)}}
+.btn{border:0;cursor:pointer;font:inherit;font-weight:700;color:#fff;padding:13px 22px;border-radius:99px;background:linear-gradient(135deg,var(--a),var(--a2));box-shadow:0 8px 20px -6px var(--a);transition:transform .25s cubic-bezier(.22,1,.36,1),filter .2s}
+.btn:hover{filter:brightness(1.08);transform:translateY(-2px)}.btn:active{transform:scale(.95)}
+.btn.ghost{background:var(--card);color:var(--tx);box-shadow:none;border:1px solid var(--bd)}
+input,select{font:inherit;color:var(--tx);background:rgba(128,140,170,.14);border:1px solid var(--bd);border-radius:14px;padding:11px 14px;width:100%;outline:0;transition:box-shadow .2s}
+input:focus,select:focus{box-shadow:0 0 0 3px var(--a)}
+select option{color:#111}
+.seg{position:relative;display:flex;gap:4px;padding:4px;border-radius:99px;margin-bottom:12px}
+.seg button{flex:1;border:0;background:none;color:var(--tx);font:inherit;font-weight:600;padding:9px 10px;border-radius:99px;cursor:pointer;transition:background .3s,color .3s,transform .2s}
+.seg button.on{color:#fff}.seg button:active{transform:scale(.95)}
+.grid{display:grid;grid-template-columns:1.4fr 1fr;gap:18px;align-items:start}
+.list{display:grid;gap:10px}
+.it{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:18px;animation:in .5s both}
+.it .nm{flex:1;min-width:0}.it small{color:var(--mu);display:block}
+.it .pr{display:flex;align-items:center;gap:3px;width:92px}.it .pr input{padding:8px 8px}
+.q{display:flex;align-items:center;gap:8px}
+.q button{width:32px;height:32px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--a),var(--a2));color:#fff;font-size:18px;cursor:pointer;transition:transform .2s}
+.q button:active{transform:scale(.85)}.q span{min-width:20px;text-align:center;font-weight:700}
+.pad{padding:18px}
+.row{display:flex;gap:8px;margin-bottom:8px}
+.tot div{display:flex;justify-content:space-between;padding:4px 0;color:var(--mu)}
+.tot .g{color:var(--tx);font-size:22px;font-weight:800;border-top:1px dashed var(--bd);margin-top:6px;padding-top:10px}
+.hide{display:none!important}
+.bars{display:flex;align-items:flex-end;gap:8px;height:160px;margin-top:10px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:11px;color:var(--mu)}
+.bar i{display:block;width:100%;border-radius:10px 10px 4px 4px;background:linear-gradient(180deg,var(--a2),var(--a));transform-origin:bottom;animation:gr .9s cubic-bezier(.22,1,.36,1) both}
+@keyframes gr{from{transform:scaleY(0)}}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.stat{padding:18px}.stat b{font-size:26px;display:block}
+.low{color:#ff5470!important;font-weight:700}
+nav{position:fixed;z-index:30;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;gap:4px;padding:7px;border-radius:99px;width:min(360px,92vw);animation:up .6s cubic-bezier(.22,1,.36,1) both}
+@keyframes up{from{opacity:0;transform:translate(-50%,40px)}}
+nav button{flex:1;border:0;background:none;color:var(--tx);font:inherit;font-size:12px;font-weight:700;padding:8px 4px;border-radius:99px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;transition:background .35s,transform .25s}
+nav button span{font-size:20px}nav button.on{color:#fff}nav button:active{transform:scale(.92)}
+.seg button,nav button{position:relative;z-index:1}
+.pill{position:absolute;left:0;top:0;border-radius:99px;background:linear-gradient(135deg,var(--a),var(--a2));box-shadow:0 6px 16px -6px var(--a);z-index:0;pointer-events:none;will-change:transform}
+.pill.sl{transition:transform .55s cubic-bezier(.32,.72,0,1),width .55s cubic-bezier(.32,.72,0,1),height .55s cubic-bezier(.32,.72,0,1)}
+.load{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative}
+.fl{position:fixed;top:-60px;font-size:34px;opacity:.9;animation:fall 6s linear infinite;will-change:transform;z-index:0}
+@keyframes fall{to{transform:translate3d(30px,115vh,0) rotate(40deg)}}
+.spin{width:40px;height:40px;border-radius:50%;border:4px solid var(--bd);border-top-color:var(--a);animation:sp .8s linear infinite;margin:6px 0 18px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.toast{position:fixed;z-index:50;left:50%;top:70px;transform:translateX(-50%);padding:12px 22px;border-radius:99px;font-weight:700;animation:in .4s both}
+.acc{display:flex;gap:10px;align-items:center;padding:14px;margin-bottom:10px}
+.tag{font-size:11px;padding:3px 10px;border-radius:99px;background:linear-gradient(135deg,var(--a),var(--a2));color:#fff}
+.feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.ft{padding:16px;font-weight:600;font-size:14px;animation:in .6s both;transition:transform .35s cubic-bezier(.22,1,.36,1)}.ft:hover{transform:translateY(-4px)}.ft span{display:block;font-size:26px;margin-bottom:6px}
+.foot{text-align:center;margin-top:34px}.bug{display:inline-block;padding:12px 20px;margin:0 0 14px;font-size:14px;color:var(--mu)}.bug a{color:var(--a);font-weight:700;text-decoration:none}.foot>p:last-child{font-weight:600;margin:6px 0 0}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.choose{gap:12px}.big{padding:24px 8px}.big .ic{font-size:50px}#app{padding-top:64px}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important}}
+</style></head>
+<body data-th="glass">
+<div class="bl"></div><div class="bl"></div><div class="bl"></div>
+<div id="themes" class="glass"><button data-t="light" title="Light">☀️</button><button data-t="dark" title="Dark">🌙</button><button data-t="glass" title="Liquid Glass">💎</button></div>
+<div id="app"></div>
+<nav class="glass hide" id="nav"><button data-v="home"><span>🏠</span>Home</button><button data-v="sales"><span>📊</span>Sales</button><button data-v="acct"><span>👤</span>Account</button></nav>
+<script>
+const $=s=>document.querySelector(s),app=$('#app');
+const MOTI=["Every bill you make is a small win.","Small steps, big business.","Smile at your customers, they’ll smile back.","Today’s hustle is tomorrow’s success.","Be the reason someone loves shopping here.","Great service is the best advertisement.","Keep going, your best day is ahead.","Consistency beats luck every time.","Make it easy, make it quick, make it kind."];
+const G=[["Rice 1kg",70],["Milk 1L",56],["Bread",40],["Eggs (12)",84],["Tomato 1kg",30],["Onion 1kg",35],["Potato 1kg",28],["Sugar 1kg",48],["Tea 250g",120],["Apples 1kg",180]];
+const R=[["Paneer Butter Masala",240],["Veg Biryani",180],["Masala Dosa",110],["Margherita Pizza",280],["Veg Burger",140],["White Sauce Pasta",190],["Cold Coffee",90],["Gulab Jamun",70]];
+let S,T,A=0,tab='home',sub='bill',cart={},o={del:'c',pay:'cash',um:'UPI ID'};
+try{S=JSON.parse(localStorage.getItem('bb'))}catch(e){}
+S=S||{theme:matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light',acc:{g:['My Grocery Store'],r:['My Restaurant']},data:{}};
+const save=()=>{try{localStorage.setItem('bb',JSON.stringify(S))}catch(e){}};
+const rnd=a=>a[Math.floor(Math.random()*a.length)],inr=n=>'₹'+(+n).toFixed(2).replace(/\.00$/,'');
+const day=(d=new Date())=>d.toLocaleDateString('en-CA');
+function D(){const k=T+A;return S.data[k]||(S.data[k]={items:(T=='g'?G:R).map(x=>({n:x[0],p:x[1],s:T=='g'?50:30})),sales:[]})}
+function setTheme(t){S.theme=t;document.body.dataset.th=t;document.querySelectorAll('#themes button').forEach(b=>b.classList.toggle('on',b.dataset.t==t));save()}
+document.querySelectorAll('#themes button').forEach(b=>b.onclick=()=>setTheme(b.dataset.t));
+function toast(m){const t=document.createElement('div');t.className='toast glass';t.textContent=m;document.body.append(t);setTimeout(()=>t.remove(),2200)}
+/* ---- Billing logic (same as the C code: calcBill) ---- */
+function calcBill(sub,gst,del){const tax=sub*gst/100;return{tax,total:sub+tax+del}}
+/* ---- Home ---- */
+function period(){const h=new Date().getHours();return h<5?['🌌','The night is deep – rest well, dream big.']:h<12?['🌅','Good morning! Fresh start, fresh sales.']:h<17?['☀️','Bright afternoon – keep the energy up!']:h<20?['🌇','Evening is here – rush hour is coming!']:['🌙','The night is coming – finish strong!']}
+function home(){T=null;$('#nav').classList.add('hide');document.body.removeAttribute('data-t');
+const p=period();
+app.innerHTML=`<div class="view"><h1>Hello 👋 <span class="grad">Welcome</span></h1>
+<div class="glass msg" style="border-radius:20px">${rnd(MOTI)}</div>
+<div class="glass clock"><span class="em">${p[0]}</span><div><b id="tm"></b><small id="dt"></small></div><div style="flex:1;min-width:160px;color:var(--mu);font-family:Lora,serif;font-style:italic">${p[1]}</div></div>
+<h2>Quick Start with Your Billing</h2><p class="sub">Choose where you’re billing today</p>
+<div class="choose"><button class="big glass g" onclick="pick('g')"><span class="ic">🛒</span><b>Grocery Store</b><small>Fresh &amp; fast billing</small></button>
+<button class="big glass r" onclick="pick('r')"><span class="ic">🍽️</span><b>Restaurant</b><small>Tables, takeaway &amp; delivery</small></button></div>
+<h2 style="margin-top:34px">✨ Highlighted Features</h2>
+<div class="feats">${[['⚡','Quick, easy billing'],['🖨️','Black &amp; white printable bills'],['📲','Cash &amp; UPI payments'],['🛵','Counter &amp; home delivery'],['📦','Live stock manager'],['📊','Today &amp; 7-day sales'],['👥','2 accounts per store'],['🎨','Light, Dark &amp; Glass themes']].map((f,i)=>`<div class="glass ft" style="animation-delay:${i*60}ms"><span>${f[0]}</span>${f[1]}</div>`).join('')}</div>
+<div class="foot"><p class="glass bug">🐞 Got any bugs or faced issues? Feel free to email:<br><a href="mailto:sohampednekar2710@gmail.com">sohampednekar2710@gmail.com</a></p><p>Made with ❤️ by <b class="grad">Team Coder’s Syndicate!</b></p></div></div>`;tick()}
+function tick(){const t=$('#tm');if(!t)return;const n=new Date();t.textContent=n.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});$('#dt').textContent=n.toLocaleDateString([], {weekday:'long',day:'numeric',month:'long',year:'numeric'})}
+setInterval(tick,15000);
+function pick(t){T=t;document.body.dataset.t=t;if(S.acc[t].length>1){app.innerHTML=`<div class="view"><h1>Which <span class="grad">account?</span></h1><p class="sub">Select one to continue</p><div class="list">${S.acc[t].map((n,i)=>`<button class="big glass" style="padding:22px" onclick="A=${i};load()"><b>${t=='g'?'🛒':'🍽️'} ${n}</b></button>`).join('')}</div><p><button class="btn ghost" onclick="home()">← Back</button></p></div>`}else{A=0;load()}}
+function load(){const em=T=='g'?['🥕','🍅','🥦','🍎','🥛','🍞','🌽','🍋']:['🍕','🍔','🍜','🍰','🥗','🍟','🍛','🥤'];
+app.innerHTML=`<div class="load view">${em.map((e,i)=>`<span class="fl" style="left:${6+i*12}%;animation-delay:${-i*.75}s">${e}</span>`).join('')}<div class="spin"></div><h2>Setting up your ${T=='g'?'Grocery Store':'Restaurant'}…</h2><div class="glass msg" style="border-radius:20px">${rnd(MOTI)}</div></div>`;
+setTimeout(()=>{tab='home';sub='bill';cart={};o={del:'c',pay:'cash',um:'UPI ID'};$('#nav').classList.remove('hide');render()},1000)}
+/* ---- App ---- */
+function render(){document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v==tab));mv($('#nav'));scrollTo(0,0);
+if(tab=='home')return sub=='bill'?bill():stock();if(tab=='sales')return sales();acct()}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.v;render()});
+function head(t,s){return `<h1>${T=='g'?'🛒':'🍽️'} <span class="grad">${S.acc[T][A]}</span></h1><p class="sub">${s}</p>`}
+function tabs(){return `<div class="seg glass"><button class="${sub=='bill'?'on':''}" onclick="sw('bill',this)">🧾 Billing</button><button class="${sub=='stock'?'on':''}" onclick="sw('stock',this)">📦 Stock</button></div>`}
+function bill(){const d=D();
+app.innerHTML=`<div class="view">${head('', 'Tap + to add items, then generate the bill')}${tabs()}
+<div class="grid"><div><div class="list">${d.items.map((it,i)=>`<div class="it glass" style="animation-delay:${i*40}ms"><div class="nm"><b>${it.n}</b><small id="s${i}">Stock: ${it.s}</small></div><div class="pr">₹<input type="number" min="0" value="${it.p}" onchange="setP(${i},this.value)"></div><div class="q"><button onclick="qty(${i},-1)">−</button><span id="q${i}">${cart[i]||0}</span><button onclick="qty(${i},1)">+</button></div></div>`).join('')}</div>
+<div class="glass pad" style="margin-top:14px"><h2>➕ Add item not in list</h2><div class="row"><input id="an" placeholder="Item name"><input id="ap" type="number" placeholder="Price" style="width:100px"><input id="as" type="number" placeholder="Stock" style="width:90px"></div><button class="btn" onclick="addItem()">Add Item</button></div></div>
+<div class="glass pad" style="position:sticky;top:60px"><h2>Bill Summary</h2>
+<input id="cn" placeholder="Customer name (optional)" style="margin-bottom:10px">
+<div class="seg glass" id="sd"><button data-v="c" class="on">🏪 ${T=='g'?'Counter':'Counter / Dine-in'}</button><button data-v="h">🛵 Home Delivery</button></div>
+<div id="hd" class="hide"><input id="ad" placeholder="Delivery address" style="margin-bottom:8px"><input id="dc" type="number" placeholder="Delivery charges (₹)" value="30" oninput="upd()" style="margin-bottom:10px"></div>
+<div class="seg glass" id="sp"><button data-v="cash" class="on">💵 Cash</button><button data-v="upi">📲 UPI</button></div>
+<div id="up" class="hide"><div class="row"><select id="um"><option>UPI ID</option><option>Transaction ID</option></select></div><input id="ur" placeholder="Enter UPI ID / Transaction ID" style="margin-bottom:10px"></div>
+<div class="tot"><div><span>Subtotal</span><span id="t1">₹0</span></div><div><span>GST (5%)</span><span id="t2">₹0</span></div><div id="t3r" class="hide"><span>Delivery</span><span id="t3">₹0</span></div><div class="g"><span>Total</span><span id="t4">₹0</span></div></div>
+<button class="btn" style="width:100%;margin-top:12px" onclick="gen()">🖨️ Generate &amp; Print Bill</button></div></div></div>`;
+$('#sd').onclick=e=>{const b=e.target.closest('button');if(!b)return;o.del=b.dataset.v;[...$('#sd').children].forEach(x=>x.classList.toggle('on',x==b));$('#hd').classList.toggle('hide',o.del!='h');$('#t3r').classList.toggle('hide',o.del!='h');mv($('#sd'));upd()};
+$('#sp').onclick=e=>{const b=e.target.closest('button');if(!b)return;o.pay=b.dataset.v;[...$('#sp').children].forEach(x=>x.classList.toggle('on',x==b));$('#up').classList.toggle('hide',o.pay!='upi');mv($('#sp'))};
+upd()}
+function sum(){const d=D();return d.items.reduce((s,it,i)=>s+(cart[i]||0)*it.p,0)}
+function upd(){const s=sum(),dl=o.del=='h'?+($('#dc')?.value||0):0,c=calcBill(s,5,dl);$('#t1').textContent=inr(s);$('#t2').textContent=inr(c.tax);$('#t3').textContent=inr(dl);$('#t4').textContent=inr(c.total)}
+function qty(i,n){const it=D().items[i],v=(cart[i]||0)+n;if(v<0)return;if(v>it.s)return toast('Only '+it.s+' in stock');cart[i]=v;$('#q'+i).textContent=v;upd()}
+function setP(i,v){D().items[i].p=Math.max(0,+v||0);save();upd()}
+function addItem(){const n=$('#an').value.trim(),p=+$('#ap').value,s=+$('#as').value||20;if(!n||!(p>=0)||$('#ap').value==='')return toast('Enter item name & price');D().items.push({n,p,s});save();bill()}
+function gen(){const d=D(),lines=d.items.map((it,i)=>({n:it.n,p:it.p,q:cart[i]||0,i})).filter(x=>x.q);if(!lines.length)return toast('Add at least one item');
+const h=o.del=='h',ad=h?$('#ad').value.trim():'',ref=o.pay=='upi'?$('#ur').value.trim():'';
+if(h&&!ad)return toast('Enter delivery address');if(o.pay=='upi'&&!ref)return toast('Enter UPI ID / Transaction ID');
+const s=sum(),dl=h?+$('#dc').value||0:0,c=calcBill(s,5,dl),no=String(d.sales.length+1).padStart(4,'0');
+const sale={t:Date.now(),d:day(),total:c.total,no};d.sales.push(sale);lines.forEach(l=>d.items[l.i].s-=l.q);save();
+printBill({no,name:S.acc[T][A],type:T,cn:$('#cn').value.trim(),h,ad,ref,um:$('#um').value,pay:o.pay,lines,s,c,dl});
+cart={};toast('Bill saved ✔');bill()}
+function printBill(b){const n=new Date(),r=(a,c)=>`<tr><td>${a}</td><td style="text-align:right">${c}</td></tr>`;
+const html=`<html><head><title>Bill ${b.no}</title><style>@page{margin:6mm}body{font-family:'Courier New',monospace;font-size:12px;color:#000;background:#fff;width:300px;margin:0 auto}h2,p{text-align:center;margin:3px 0}hr{border:0;border-top:1px dashed #000}table{width:100%;border-collapse:collapse}td,th{padding:2px 0;text-align:left}</style></head><body>
+<h2>${b.name.toUpperCase()}</h2><p>${b.type=='g'?'Grocery Store':'Restaurant'} • Tax Invoice</p><hr>
+<p style="text-align:left">Bill No: ${b.no}<br>Date: ${n.toLocaleDateString()} ${n.toLocaleTimeString()}<br>Customer: ${b.cn||'Walk-in'}<br>Order: ${b.h?'Home Delivery':'Counter'}${b.h?'<br>Address: '+b.ad:''}</p><hr>
+<table><tr><th>Item</th><th>Qty</th><th style="text-align:right">Amt</th></tr>${b.lines.map(l=>`<tr><td>${l.n}<br>@ ${inr(l.p)}</td><td>${l.q}</td><td style="text-align:right">${inr(l.p*l.q)}</td></tr>`).join('')}</table><hr>
+<table>${r('Subtotal',inr(b.s))}${r('GST 5%',inr(b.c.tax))}${b.h?r('Delivery',inr(b.dl)):''}<tr><td><b>TOTAL</b></td><td style="text-align:right"><b>${inr(b.c.total)}</b></td></tr></table><hr>
+<p>Paid by: ${b.pay=='upi'?'UPI ('+b.um+': '+b.ref+')':'Cash'}</p><hr><p><b>Thank You!</b><br>Visit Again 🙏</p></body></html>`;
+const f=document.createElement('iframe');f.style.cssText='position:fixed;width:0;height:0;border:0;opacity:0';document.body.append(f);f.contentDocument.write(html);f.contentDocument.close();setTimeout(()=>{f.contentWindow.focus();f.contentWindow.print();setTimeout(()=>f.remove(),4000)},300)}
+/* ---- Stock ---- */
+function stock(){const d=D();app.innerHTML=`<div class="view">${head('','Keep an eye on what’s left')}${tabs()}<div class="list">${d.items.map((it,i)=>`<div class="it glass" style="animation-delay:${i*35}ms"><div class="nm"><b>${it.n}</b><small class="${it.s<10?'low':''}">${it.s<10?'⚠ Low stock':T=='g'?'In stock':'Portions available'}</small></div><div style="width:100px"><input type="number" min="0" value="${it.s}" onchange="D().items[${i}].s=Math.max(0,+this.value||0);save();stock()"></div></div>`).join('')}</div></div>`}
+/* ---- Sales ---- */
+function sales(){const d=D(),t=day(),ds=[];for(let i=6;i>=0;i--){const x=new Date();x.setDate(x.getDate()-i);const k=day(x);ds.push({l:x.toLocaleDateString([], {weekday:'short'}),v:d.sales.filter(s=>s.d==k).reduce((a,s)=>a+s.total,0),k})}
+const td=ds[6],wk=ds.reduce((a,x)=>a+x.v,0),mx=Math.max(...ds.map(x=>x.v),1),cnt=d.sales.filter(s=>s.d==t).length;
+app.innerHTML=`<div class="view">${head('','Sales for this '+(T=='g'?'store':'restaurant')+' account')}
+<div class="stats"><div class="glass stat"><small>Today’s Sales</small><b class="grad">${inr(td.v)}</b><small>${cnt} bills</small></div><div class="glass stat"><small>Last 7 Days</small><b class="grad">${inr(wk)}</b><small>${d.sales.filter(s=>ds.some(x=>x.k==s.d)).length} bills</small></div></div>
+<div class="glass pad"><h2>Last 7 days</h2><div class="bars">${ds.map((x,i)=>`<div class="bar"><span>${x.v?'₹'+Math.round(x.v):''}</span><i style="height:${Math.max(x.v/mx*80,x.v?4:2)}%;animation-delay:${i*70}ms"></i><span style="margin-top:6px">${x.l}</span></div>`).join('')}</div></div></div>`}
+/* ---- Account ---- */
+function acct(){const L=S.acc[T];app.innerHTML=`<div class="view"><h1>👤 <span class="grad">Account Center</span></h1><p class="sub">Up to 2 ${T=='g'?'store':'restaurant'} accounts</p>
+${L.map((n,i)=>`<div class="glass acc"><input value="${n}" onchange="S.acc[T][${i}]=this.value.trim()||'Account ${i+1}';save()">${i==A?'<span class="tag">Active</span>':`<button class="btn" onclick="A=${i};toast('Switched');render()">Switch</button>`}</div>`).join('')}
+${L.length<2?`<button class="btn" onclick="S.acc[T].push('${T=='g'?'Grocery Store 2':'Restaurant 2'}');save();acct()">➕ Add second account</button>`:''}
+<p style="margin-top:18px"><button class="btn ghost" onclick="home()">🏠 Back to Start</button></p></div>`}
+/* sliding pill for nav + segmented controls */
+function mv(el){if(!el)return;const on=el.querySelector('button.on');if(!on||!on.offsetWidth)return;let p=el.querySelector('.pill');if(!p){p=document.createElement('i');p.className='pill';el.prepend(p)}
+const set=()=>{p.style.width=on.offsetWidth+'px';p.style.height=on.offsetHeight+'px';p.style.transform='translate3d('+on.offsetLeft+'px,'+on.offsetTop+'px,0)'};set();if(!p.classList.contains('sl')){void p.offsetWidth;p.classList.add('sl')}}
+function sw(s,b){if(sub==s)return;sub=s;const g=b.parentElement;g.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x==b));mv(g);setTimeout(render,320)}
+const mvAll=()=>document.querySelectorAll('.seg,nav').forEach(mv);
+new MutationObserver(()=>requestAnimationFrame(mvAll)).observe(app,{childList:true});
+addEventListener('resize',mvAll);
+setTheme(S.theme);home();
+</script></body></html>
