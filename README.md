@@ -43,7 +43,7 @@ gcc src/main.c -o billbuddy
 ```
 
 ## 🌐 Run the web version
-Open the Live Demo link, or open `docs/index.html` in any browser.
+Open the Live Project link, or open `docs/index.html` in any browser.
 
 ## 🧮 Billing formula
 `Total = Subtotal + (Subtotal × GST% / 100) + Delivery charge`
