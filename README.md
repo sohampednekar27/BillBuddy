@@ -50,7 +50,7 @@ Open the Live Demo link, or open `docs/index.html` in any browser.
 
 ## 👥 Team
 Made with ❤️ by **Team Coder’s Syndicate**
-Bugs or issues? Email: sohampednekar2710@gmail.com
+Bugs or issues? Or More Suggestions? Email: sohampednekar2710@gmail.com
 
 ## 🤝 Collaborators
 @raneatharva2023 and @OgStrappedScarf74
